@@ -10,7 +10,7 @@ $temp = json_decode($json,true);
 $data = $temp['data'];
 $order_id = $data['order_id'];
 $order_info = fn_get_order_info($order_id);
-$payment_id = db_get_field("SELECT payment_id FROM ?:orders WHERE order_id = ?", $order_id);
+$payment_id = db_get_field("SELECT payment_id FROM ?:orders WHERE order_id = ?i", $order_id);
 $processor_data = fn_get_payment_method_data($payment_id);
 
 if ( $processor_data['processor_params']['pagamastarde_environment']){
