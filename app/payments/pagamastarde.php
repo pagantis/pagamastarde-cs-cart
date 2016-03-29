@@ -37,8 +37,8 @@ else{
 //		$ipn_url = fn_url('/app/payments/ecomcharge_callback.php')
 
     $payment_url='https://pmt.pagantis.com/v1/installments';
-		$ok_url = fn_url("payment_notification.notify?payment=ecomcharge&order_id=$order_id&transmode=success", AREA, 'http');
-		$fail_url = fn_url("payment_notification.notify?payment=ecomcharge&order_id=$order_id&transmode=fail", AREA, 'http');
+		$ok_url = fn_url("payment_notification.notify?payment=pagamastarde&order_id=$order_id&transmode=success", AREA, 'http');
+		$fail_url = fn_url("payment_notification.notify?payment=pagamastarde&order_id=$order_id&transmode=fail", AREA, 'http');
 		$locale = CART_LANGUAGE;
 		$currency = $order_info['secondary_currency'];
 		$amount = $order_info['total']*100;
