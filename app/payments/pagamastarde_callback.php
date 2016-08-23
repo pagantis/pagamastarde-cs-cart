@@ -20,7 +20,8 @@ if ( $processor_data['processor_params']['pagamastarde_environment']){
 }
 
 $signature_check = sha1($secret_key.$temp['account_id'].$temp['api_version'].$temp['event'].$temp['data']['id']);
-if ($signature_check != $temp['signature'] ){
+$signature_check_sha512 = hash('sha512', $secret_key.$temp['account_id'].$temp['api_version'].$temp['event'].$temp['data']['id']);
+if ($signature_check != $temp['signature'] && $signature_check_sha512 != $temp['signature']){
   //hack detected
   die( '<b>PagaMasTarde</b>: hack detected' );
 }

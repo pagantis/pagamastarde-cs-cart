@@ -53,6 +53,7 @@ else{
         . $callback_url
         . $discount;
     $signature = sha1($string);
+    $signature = hash('sha512',$string);
     $full_name=$order_info[b_firstname].' '.$order_info[b_lastname];
 
     echo <<<EOT
