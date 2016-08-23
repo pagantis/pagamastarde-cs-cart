@@ -70,6 +70,10 @@ else{
       <input type='hidden' name="address[city]" value="{$order_info[b_city]}" />
       <input type='hidden' name="address[province]" value="{$order_info[b_state_descr]}" />
       <input type='hidden' name="address[zipcode]" value="{$order_info[b_zipcode]}" />
+      <input type='hidden' name="shipping[street]" value="{$order_info[s_address]}" />
+      <input type='hidden' name="shipping[city]" value="{$order_info[s_city]}" />
+      <input type='hidden' name="shipping[province]" value="{$order_info[s_state_descr]}" />
+      <input type='hidden' name="shipping[zipcode]" value="{$order_info[s_zipcode]}" />
       <input type='hidden' name="phone" value="{$order_info[phone]}" />
       <input type='hidden' name="email" value="{$order_info[email]}" />
       <input type='hidden' name="ok_url" value="{$ok_url}" />
