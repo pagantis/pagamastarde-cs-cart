@@ -14,10 +14,9 @@ if (defined('PAYMENT_NOTIFICATION') && $mode == 'notify') {
     check_notification($order_id);
     fn_order_placement_routines('route', $order_id);
     exit;
-}
 
-//CALLBACK ENDPOINT
-elseif (defined('PAYMENT_NOTIFICATION') && $mode == 'callback') {
+//NOTIFICATION ENDPOINT
+} elseif (defined('PAYMENT_NOTIFICATION') && $mode == 'callback') {
     $json = file_get_contents('php://input');
     $temp = json_decode($json, true);
 
@@ -27,10 +26,8 @@ elseif (defined('PAYMENT_NOTIFICATION') && $mode == 'callback') {
     echo json_encode($response, JSON_UNESCAPED_SLASHES);
     exit;
 
-}
 //CHECKOUT ENDPOINT
-else
-{
+} else {
     $form_fields = get_orders_fields($order_info, $processor_data);
     $payment_url='https://pmt.pagantis.com/v1/installments';
 

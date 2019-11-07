@@ -6,6 +6,13 @@ if (!defined('BOOTSTRAP')) {
     die('Access denied');
 }
 
+/**
+ * @param        $secret_key
+ * @param        $fields
+ * @param string $mode
+ *
+ * @return string
+ */
 function get_signature($secret_key, $fields, $mode = 'sha512')
 {
     //SIGNATURE
@@ -21,6 +28,12 @@ function get_signature($secret_key, $fields, $mode = 'sha512')
     }
 }
 
+/**
+ * @param $order_info
+ * @param $processor_data
+ *
+ * @return array
+ */
 function get_orders_fields($order_info, $processor_data)
 {
     $fields = array();
@@ -104,6 +117,11 @@ function get_orders_fields($order_info, $processor_data)
     return $fields;
 }
 
+/**
+ * @param null $order_id
+ *
+ * @return bool
+ */
 function check_notification($order_id = null)
 {
     $i = 0;
@@ -121,6 +139,11 @@ function check_notification($order_id = null)
     return $found;
 }
 
+/**
+ * @param null $temp
+ *
+ * @return array
+ */
 function callback($temp = null)
 {
     $response = array('code'=>500,'message'=>'KO');
@@ -133,7 +156,6 @@ function callback($temp = null)
 
         $data = $temp['data'];
         $order_id = $data['order_id'];
-        $order_info = fn_get_order_info($order_id);
         $payment_id = db_get_field("SELECT payment_id FROM ?:orders WHERE order_id = ?i", $order_id);
         $processor_data = fn_get_payment_method_data($payment_id);
 
