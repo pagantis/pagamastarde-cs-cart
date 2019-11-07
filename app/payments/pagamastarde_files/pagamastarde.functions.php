@@ -15,7 +15,6 @@ if (!defined('BOOTSTRAP')) {
  */
 function get_signature($secret_key, $fields, $mode = 'sha512')
 {
-    //SIGNATURE
     $string = $secret_key;
     foreach ($fields as $key => $value) {
         $string.=$value;
