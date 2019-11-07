@@ -1,8 +1,10 @@
 <?php
 
-if (!defined('BOOTSTRAP')) { die('Access denied'); }
-
 use Tygh\Registry;
+
+if (!defined('BOOTSTRAP')) {
+    die('Access denied');
+}
 
 function get_signature($secret_key, $fields, $mode = 'sha512')
 {
@@ -12,7 +14,7 @@ function get_signature($secret_key, $fields, $mode = 'sha512')
         $string.=$value;
     }
 
-    if($mode == 'sha512') {
+    if ($mode == 'sha512') {
         return hash('sha512', $string);
     } else {
         return sha1($string);
@@ -22,10 +24,11 @@ function get_signature($secret_key, $fields, $mode = 'sha512')
 function get_orders_fields($order_info, $processor_data)
 {
     $fields = array();
+    $order_id = $fields['order_id'];
     $fields['account_id'] = $processor_data['processor_params']['pagamastarde_public_key'];
-    $fields['order_id'] = $order_info['order_id'];
+    $fields['order_id'] = $order_id;
     $fields['amount'] = $order_info['total']*100;
-    $fields['description'] = 'Order #'.$order_id;
+    $fields['description'] = 'Order #'.$fields['order_id'];
     $fields['currency'] = $order_info['secondary_currency'];
     $fields['full_name'] = $order_info[b_firstname].' '.$order_info[b_lastname];
     $fields['address[street]'] = $order_info[b_address];
@@ -38,19 +41,35 @@ function get_orders_fields($order_info, $processor_data)
     $fields['shipping[zipcode]'] = $order_info[s_zipcode];
     $fields['phone'] = $order_info[phone];
     $fields['email'] = $order_info[email];
-    $fields['ok_url'] = fn_url("payment_notification.notify?payment=pagamastarde&order_id=$order_id&transmode=success", AREA, 'http');
+    $fields['ok_url'] = fn_url(
+        "payment_notification.notify?payment=pagamastarde&order_id=$order_id&transmode=success",
+        AREA,
+        'http'
+    );
     $fields['nok_url'] = fn_url('checkout.checkout');
-    $fields['callback_url'] = fn_url("payment_notification.callback?payment=pagamastarde&order_id=$order_id&transmode=success", AREA, 'http');
-//TODO
-    $fields['callback_url'] = "http://651afb1b.ngrok.io/cscart/index.php?dispatch=payment_notification.callback&payment=pagamastarde&order_id=&transmode=success";
+    $fields['callback_url'] = fn_url(
+        "payment_notification.callback?payment=pagamastarde&order_id=$order_id&transmode=success",
+        AREA,
+        'http'
+    );
     $fields['purchase_country'] = CART_LANGUAGE;
-    $signature_fields = array($fields['account_id'], $fields['order_id'], $fields['amount'], $fields['currency'], $fields['ok_url'], $fields['nok_url'], $fields['callback_url']);
-    $fields['signature'] = get_signature($processor_data['processor_params']['pagamastarde_secret_key'], $signature_fields);
-
+    $signature_fields = array(
+        $fields['account_id'],
+        $fields['order_id'],
+        $fields['amount'],
+        $fields['currency'],
+        $fields['ok_url'],
+        $fields['nok_url'],
+        $fields['callback_url']
+    );
+    $fields['signature'] = get_signature(
+        $processor_data['processor_params']['pagamastarde_secret_key'],
+        $signature_fields
+    );
 
     $it = 0;
     //PAYMENT SUBCHARGES
-    if ( $order_info['payment_surcharge'] > 0 ){
+    if ($order_info['payment_surcharge']>0) {
         $fields["items[$it][description]"] = $order_info['payment_method']['surcharge_title'];
         $fields["items[$it][amount]"] = 1;
         $fields["items[$it][quantity]"] = $order_info['payment_surcharge'];
@@ -58,10 +77,8 @@ function get_orders_fields($order_info, $processor_data)
     }
 
     //PRODUCTS
-    if ($order_info['shipping_cost']> 0)
-    {
-        foreach ($order_info['shipping'] as $k => $v)
-        {
+    if ($order_info['shipping_cost']> 0) {
+        foreach ($order_info['shipping'] as $k => $v) {
             $fields["items[$it][description]"] = $v['shipping'];
             $fields["items[$it][amount]"] = $order_info['shipping_cost'];
             $fields["items[$it][quantity]"] = 1;
@@ -71,10 +88,11 @@ function get_orders_fields($order_info, $processor_data)
 
     //PRODUCTS
     if (!empty($order_info['products'])) {
-        foreach ($order_info['products'] as $k => $v)
-        {
+        foreach ($order_info['products'] as $k => $v) {
             $price = fn_format_price($v['price'] - (fn_external_discounts($v) / $v['amount']));
-            if ($price <= 0) continue;
+            if ($price <= 0) {
+                continue;
+            }
 
             $fields["items[$it][description]"] = ($v['extra']['product']). " (".$v['amount'].")";
             $fields["items[$it][amount]"] = $price;
@@ -107,8 +125,8 @@ function callback($temp = null)
 {
     $response = array('code'=>500,'message'=>'KO');
 
-    try{
-        if (!count($temp)){
+    try {
+        if (!count($temp)) {
             $response['message'] = 'Empty body';
             return $response;
         }
@@ -119,7 +137,7 @@ function callback($temp = null)
         $payment_id = db_get_field("SELECT payment_id FROM ?:orders WHERE order_id = ?i", $order_id);
         $processor_data = fn_get_payment_method_data($payment_id);
 
-        if (!count($processor_data)){
+        if (!count($processor_data)) {
             $response['message'] = 'No quote found';
             $response['code'] = 429;
             return $response;
@@ -131,10 +149,17 @@ function callback($temp = null)
         $signature_fields['event'] = $temp['event'];
         $signature_fields['data_id'] = $temp['data']['id'];
 
-        $signature_check = get_signature($processor_data['processor_params']['pagamastarde_secret_key'], $signature_fields, 'sha1');
-        $signature_check_sha512 = get_signature($processor_data['processor_params']['pagamastarde_secret_key'], $signature_fields);
+        $signature_check = get_signature(
+            $processor_data['processor_params']['pagamastarde_secret_key'],
+            $signature_fields,
+            'sha1'
+        );
+        $signature_check_sha512 = get_signature(
+            $processor_data['processor_params']['pagamastarde_secret_key'],
+            $signature_fields
+        );
 
-        if ($signature_check != $temp['signature'] && $signature_check_sha512 != $temp['signature']){
+        if ($signature_check != $temp['signature'] && $signature_check_sha512 != $temp['signature']) {
             $response['code'] = 403;
             $response['message'] = 'Hack detected';
             return $response;
@@ -162,5 +187,4 @@ function callback($temp = null)
     }
 
     return $response;
-
 }

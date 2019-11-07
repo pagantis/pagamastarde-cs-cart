@@ -1,8 +1,10 @@
 <?php
-//Auth : Senthil.R (senthil1975@gmail.com)
+
 use Tygh\Registry;
 
-if ( !defined('AREA') ) { die('Access denied'); }
+if (!defined('AREA')) {
+    die('Access denied');
+}
 
 require_once(Registry::get('config.dir.payments') . 'pagamastarde_files/pagamastarde.functions.php');
 
@@ -17,7 +19,7 @@ if (defined('PAYMENT_NOTIFICATION') && $mode == 'notify') {
 //CALLBACK ENDPOINT
 elseif (defined('PAYMENT_NOTIFICATION') && $mode == 'callback') {
     $json = file_get_contents('php://input');
-    $temp = json_decode($json,true);
+    $temp = json_decode($json, true);
 
     $response = callback($temp);
     header("HTTP/1.1 ".$response['code'], true, $response['code']);
@@ -53,5 +55,3 @@ EOT;
 
     exit;
 }
-
-?>
