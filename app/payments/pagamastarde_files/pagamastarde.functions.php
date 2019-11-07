@@ -187,10 +187,11 @@ function callback($temp = null)
             return $response;
         }
 
+        $pp_response = array();
         switch ($temp['event']) {
             case 'charge.created':
                 $pp_response['order_status'] = 'P';
-                $pp_response["reason_text"] = '';
+                $pp_response["reason_text"] = "Order ID:$order_id -- Paga+Tarde ID".$data['id'];
                 $pp_response["transaction_id"] = $order_id;
                 break;
             case 'charge.failed':
@@ -205,7 +206,8 @@ function callback($temp = null)
         $response['code'] = 200;
         $response['message'] = 'OK';
     } catch (Exception $e) {
-        $response = array('code'=>500,'message'=>$e->getMessage());
+        $response['code'] = 500;
+        $response['message'] = $e->getMessage();
     }
 
     return $response;
