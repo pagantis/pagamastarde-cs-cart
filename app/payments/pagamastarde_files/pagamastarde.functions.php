@@ -36,7 +36,7 @@ function get_signature($secret_key, $fields, $mode = 'sha512')
 function get_orders_fields($order_info, $processor_data)
 {
     $fields = array();
-    $order_id = $fields['order_id'];
+    $order_id = $order_info['order_id'];
     $fields['account_id'] = $processor_data['processor_params']['pagamastarde_public_key'];
     $fields['order_id'] = $order_id;
     $fields['amount'] = $order_info['total']*100;
