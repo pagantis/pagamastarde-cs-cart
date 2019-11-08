@@ -25,30 +25,29 @@ if (defined('PAYMENT_NOTIFICATION') && $mode == 'notify') {
     header('Content-Type: application/json', true);
     echo json_encode($response, JSON_UNESCAPED_SLASHES);
     exit;
+}
 
-//CHECKOUT ENDPOINT
-} else {
-    $form_fields = get_orders_fields($order_info, $processor_data);
-    $payment_url='https://pmt.pagantis.com/v1/installments';
+//CHECKOUT PROCESS
+$form_fields = get_orders_fields($order_info, $processor_data);
+$payment_url='https://pmt.pagantis.com/v1/installments';
 
-    $fields='';
-    foreach ($form_fields as $key => $value) {
-        $fields.="<input type='hidden' name='$key' value='$value' />";
-    }
+$fields='';
+foreach ($form_fields as $key => $value) {
+    $fields.="<input type='hidden' name='$key' value='$value' />";
+}
 
-    $msg = fn_get_lang_var('text_cc_processor_connection');
-    $msg = str_replace('[processor]', 'pagamastarde', $msg);
+$msg = fn_get_lang_var('text_cc_processor_connection');
+$msg = str_replace('[processor]', 'pagamastarde', $msg);
 
-    echo <<<EOT
-    <html>
-      <body onLoad="document.process.submit();">
-        <form method='post' action="{$payment_url}" name="process">
-          {$fields}
-        </form>
-        <div align=center>{$msg}</div>
-      </body>
-    </html>
+echo <<<EOT
+<html>
+  <body onLoad="document.process.submit();">
+    <form method='post' action="{$payment_url}" name="process">
+      {$fields}
+    </form>
+    <div align=center>{$msg}</div>
+  </body>
+</html>
 EOT;
 
-    exit;
-}
+exit;

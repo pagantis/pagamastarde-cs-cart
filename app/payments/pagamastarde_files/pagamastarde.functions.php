@@ -22,9 +22,9 @@ function get_signature($secret_key, $fields, $mode = 'sha512')
 
     if ($mode == 'sha512') {
         return hash('sha512', $string);
-    } else {
-        return sha1($string);
     }
+
+    return sha1($string);
 }
 
 /**
