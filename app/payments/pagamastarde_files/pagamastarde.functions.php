@@ -88,7 +88,7 @@ function get_orders_fields($order_info, $processor_data)
         $it++;
     }
 
-    //PRODUCTS
+    //SHIPPING
     if ($order_info['shipping_cost']> 0) {
         foreach ($order_info['shipping'] as $k => $v) {
             $fields["items[$it][description]"] = $v['shipping'];

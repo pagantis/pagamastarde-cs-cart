@@ -14,9 +14,10 @@ if (defined('PAYMENT_NOTIFICATION') && $mode == 'notify') {
     check_notification($order_id);
     fn_order_placement_routines('route', $order_id);
     exit;
+}
 
 //NOTIFICATION ENDPOINT
-} elseif (defined('PAYMENT_NOTIFICATION') && $mode == 'callback') {
+if (defined('PAYMENT_NOTIFICATION') && $mode == 'callback') {
     $json = file_get_contents('php://input');
     $temp = json_decode($json, true);
 
