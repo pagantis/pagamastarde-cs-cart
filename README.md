@@ -19,6 +19,10 @@ Si tienes alguna duda o pregunta no tienes más que escribirnos un email a sopor
 
 ### Release notes
 
+#### 2.0.0
+
+- Internationalization
+
 #### 1.0.0
 
 - Versión inicial
